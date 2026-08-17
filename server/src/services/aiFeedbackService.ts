@@ -78,5 +78,6 @@ export async function createAIFeedback(studentId: string, type: FeedbackType, te
 }
 
 export async function listAIFeedback(studentId: string, limit = 20) {
-  return AIFeedback.find({ studentId }).sort({ createdAt: -1 }).limit(Math.min(Math.max(limit, 1), 50)).select("type prompt submission overallScore skillScores bands annotations modelAnswer advice strengths improvements grammar vocabulary coherence fluency pronunciation nextSteps disclaimer providerModel createdAt").lean();
+  const docs = await AIFeedback.find({ studentId }).sort({ createdAt: -1 }).limit(Math.min(Math.max(limit, 1), 50)).select("type prompt submission overallScore skillScores bands annotations modelAnswer advice strengths improvements grammar vocabulary coherence fluency pronunciation nextSteps disclaimer providerModel createdAt").lean();
+  return docs.map((doc) => ({ ...doc, id: String(doc._id) }));
 }
